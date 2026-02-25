@@ -30,22 +30,43 @@ jobs:
         with:
           python-version: '3.10'
 
-      - name: Install dependencies
+      - name: Install System Dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y graphviz
+
+      - name: Install Python dependencies
         run: |
           python -m pip install --upgrade pip
-          # Ensure pathing matches your Module 5 structure
-          pip install -r requirements.txt
-          pip install pytest pytest-cov psycopg[binary] sphinx sphinx-rtd-theme pylint
+          # Path points to your module_5 folder based on your file structure
+          pip install -r module_5/requirements.txt
+          pip install pytest pytest-cov psycopg[binary] sphinx sphinx-rtd-theme pylint pydeps
 
-      - name: Run Pylint (Module 5 Requirement)
+      # REQUIREMENT 1: Run Pylint and fail if score is below 10
+      - name: Run Pylint
         run: |
-          # Linting the src directory to ensure Module 5 standards are met
-          pylint src/
+          pylint --fail-under=10 module_5/src/
 
+      # REQUIREMENT 2: Generate dependency.svg and fail if missing
+      - name: Generate Dependency Graph
+        run: |
+          pydeps module_5/src/ --noshow --output dependency.svg
+          if [ ! -f dependency.svg ]; then echo "dependency.svg not found!"; exit 1; fi
+
+      # REQUIREMENT 3: Run Snyk test (Shift-Left Security)
+      # Note: This will run and produce output. 
+      - name: Run Snyk to check for vulnerabilities
+        uses: snyk/actions/python-3.10@master
+        continue-on-error: true
+        env:
+          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+
+      # REQUIREMENT 4: Run Pytest and fail if coverage/score is below 10
       - name: Run Tests with Coverage
         run: |
-          export PYTHONPATH=".:src"
-          pytest -m "web or db or integration" --cov=src --cov-report=xml
+          cd module_5
+          export PYTHONPATH="src"
+          pytest -m "web or db or integration" --cov=src --cov-report=xml --cov-fail-under=10
         env:
           DATABASE_URL: postgresql://postgres:password@localhost:5432/gradscrape
           DB_USER: postgres
@@ -54,5 +75,5 @@ jobs:
 
       - name: Verify Sphinx Documentation Build
         run: |
-          cd docs
+          cd module_5/docs
           make html
