@@ -47,3 +47,7 @@ python -m venv .venv
 To start the Flask development server, ensure your virtual environment is active and run:
 ```bash
 python -m src.web_app.run
+
+## Static Code Analysis
+To scan code using pylint run:
+pylint src/
