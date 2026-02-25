@@ -1,0 +1,20 @@
+{% extends "index.html" %}
+
+{% block content %}
+<div class="container mt-5" style="text-align: left;">
+    <div class="row align-items-center">
+        <div class="col-md-8 text-start">
+             <h1>Shayla Hirji (she/her) </h1>
+             <h2>Revenue Analyst at Holiday Inn Club Vactions</h2>
+            <!--this body must be formatted to the left-->
+            <p>
+            Hello! My name is Shayla Hirji. I graduated from UCF in 2024 with a Bachelor's in Mathematics, and still live in the Orlando area. After finishing my degree and working for a year, I decided I missed school and wanted to seek higher education to allow me more opportunities in the future. After this class I will continue my education through the JHU online Master's in Data Science.
+            </p> 
+        </div>  
+        <!--add picture here formatted to the right-->
+         <div class="col-md-4 text-end">
+            <img src="{{url_for('static',filename='shayla photo.jpg')}}" class="img-fluid rounded" alt="Shayla Hirji"/>
+         </div>
+    </div>
+</div>
+{% endblock %}

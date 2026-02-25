@@ -1,0 +1,11 @@
+Flask==2.3.2
+psycopg[binary]==3.3.2
+python-dotenv==1.2.1
+beautifulsoup4==4.14.3
+
+[dev]
+pylint==4.0.4
+pydeps==3.0.2
+pytest==8.0.2
+pytest-cov==4.1.0
+snyk

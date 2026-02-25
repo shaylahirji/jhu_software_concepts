@@ -1,0 +1,6 @@
+[MASTER]
+# Add the src and web_app directories to the python path so Pylint can find local imports
+init-hook='import sys, os; sys.path.append(os.path.join(os.getcwd(), "src")); sys.path.append(os.path.join(os.getcwd(), "src", "web_app"))'
+
+[TYPECHECK]
+generated-members=conn.cursor,conn.commit,conn.close,connection.cursor,connection.commit,connection.close,cur.execute,cur.fetchone,cur.close,cur.rowcount

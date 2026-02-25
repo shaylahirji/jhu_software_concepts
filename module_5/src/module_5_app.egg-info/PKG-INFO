@@ -1,0 +1,15 @@
+Metadata-Version: 2.4
+Name: module_5_app
+Version: 0.1.0
+Requires-Dist: Flask==2.3.2
+Requires-Dist: psycopg[binary]==3.3.2
+Requires-Dist: python-dotenv==1.2.1
+Requires-Dist: beautifulsoup4==4.14.3
+Provides-Extra: dev
+Requires-Dist: pylint==4.0.4; extra == "dev"
+Requires-Dist: pydeps==3.0.2; extra == "dev"
+Requires-Dist: pytest==8.0.2; extra == "dev"
+Requires-Dist: pytest-cov==4.1.0; extra == "dev"
+Requires-Dist: snyk; extra == "dev"
+Dynamic: provides-extra
+Dynamic: requires-dist

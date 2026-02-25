@@ -1,0 +1,139 @@
+{% extends "index.html" %}
+
+{% block extra_css %}
+<link 
+    href = "{{url_for('static', filename='queries.css')}}"
+    rel = "stylesheet"
+>
+<style>
+    /* This class replaces the inline style logic to fix VS Code errors */
+    .btn-locked {
+        opacity: 0.5;
+        cursor: not-allowed;
+        pointer-events: none;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+{% if is_pulling_data %}
+    <meta http-equiv="refresh" content="5"> 
+    <div class="alert alert-warning">
+        Data is pulling... this page will refresh automatically when finished.
+    </div>
+{% endif %}
+    <div class="queries-container">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h1>The Grad Cafe Data Analysis</h1>
+            
+            <div class="d-flex gap-2"> 
+                <div class="tooltip-wrapper">
+                    <a role="button" 
+                       onclick="handleAction('/pull_data')" 
+                       class="btn btn-primary {% if is_pulling_data %}btn-locked{% endif %}" 
+                       id="pull-data-btn" 
+                       data-testid="pull-data-btn" 
+                       {% if is_pulling_data %}disabled{% endif %} 
+                       style="font-weight: bold; text-shadow: 0 1px 3px rgba(0,0,0,0.5);">
+                        Pull Data
+                    </a>
+                    <div class = "tooltip-box">
+                        This button will take any new data added to the Grad Cafe website and add it to the database.
+                    </div>
+                </div>
+
+                <div class="tooltip-wrapper">
+                    <a role="button" 
+                       onclick="handleAction('/update_analysis')" 
+                       class="btn btn-success {% if is_pulling_data %}btn-locked{% endif %}" 
+                       id="update-analysis-btn" 
+                       data-testid="update-analysis-btn" 
+                       {% if is_pulling_data %}disabled{% endif %} 
+                       style="font-weight: bold; text-shadow: 0 1px 3px rgba(0,0,0,0.5);">
+                        Update Analysis
+                    </a>
+                    <div class="tooltip-box">
+                        This button will update the below answers to reflect any new data that has been added to the database.
+                    </div>
+                </div>
+            </div>
+
+            <script>
+                function handleAction(url) {
+                    const updateBtn = document.getElementById('update-analysis-btn');
+                    const pullBtn = document.getElementById('pull-data-btn');
+                    
+                    [updateBtn, pullBtn].forEach(btn => {
+                        btn.setAttribute('disabled', 'disabled');
+                        // We add the class via JS to match the visual state immediately
+                        btn.classList.add('btn-locked');
+                    });
+
+                    fetch(url, { method: 'POST' })
+                        .then(response => {
+                            window.location.reload();
+                        })
+                        .catch(err => {
+                            console.error("Error:", err);
+                            window.location.reload();
+                        });
+                }
+            </script>
+        </div>
+        
+        <h2>Analysis</h2>
+
+        <div class="question">
+            <p class="q-text">How many entries do you have in your database who have applied for Fall 2026?</p>
+            <p class="answer">Answer: Applicant count: {{ fall_2026_app_count }}</p>
+        </div>
+
+        <div class="question">
+            <p class="q-text">What percentage of entries are from international students (not American or Other)?</p>
+            <p class="answer">Answer: Percent International: {{ percent_international }}%</p>
+        </div>
+
+        <div class="question">
+            <p class="q-text">What is the average GPA, GRE, GRE V, GRE AW of applicants who provide these metrics?</p>
+            <p class="answer">
+                Answer: Average GPA: {{ avg_gpa }}, Average GRE: {{ avg_gre }}, 
+                Average GRE V: {{ avg_gre_v }}, Average GRE AW: {{ avg_gre_aw }}
+            </p>
+        </div>
+
+        <div class="question">
+            <p class="q-text">What is their average GPA of American students in Fall 2026?</p>
+            <p class="answer">Answer: Average GPA of American students: {{ avg_gpa_american_fall_2026 }}</p>
+        </div>
+
+        <div class="question">
+            <p class="q-text">What percent of entries for Fall 2025 are Acceptances?</p>
+            <p class="answer">Answer: Acceptance percentage for Fall 2025: {{ percent_accepted_fall_2025 }}%</p>
+        </div>
+
+        <div class="question">
+            <p class="q-text">What is the average GPA of applicants who applied for Fall 2026 who are Acceptances?</p>
+            <p class="answer">Answer: Average GPA Accepted Fall 2026: {{ avg_gpa_fall_2026_acceptances }}</p>
+        </div>
+        <div class="question">
+            <p class="q-text">How many entries are from applicants who applied to JHU for a masters degrees in Computer Science?</p>
+            <p class="answer">Answer: Count of JHU Computer Science Masters Entries: {{ jhu_cs_masters_count }}</p>
+        </div>
+        <div class="question">
+            <p class="q-text">How many entries from 2026 are acceptances from applicants who applied to Georgetown University, MIT, Stanford University, or Carnegie Mellon University for a PhD in Computer Science?</p>
+            <p class="answer">Answer: Count of Entries: {{ num_entries_phd_cs_specified_schools }}</p>
+        </div>
+        <div class="question">
+            <p class="q-text">Do your numbers for question 8 change if you use LLM Generated Fields?</p>
+            <p class="answer">Answer: Variance of LLM vs Pulled Data Fields: {{ llm_variance }}</p>
+        </div>
+        <div class="question">
+            <p class="q-text">How many rejected did not include their GPA?</p>
+            <p class="answer">Answer: Count of rejected and missing GPA: {{ rejected_missing_gpa }}</p>
+        </div>
+        <div class="question">
+            <p class="q-text"> Which university did the most applicants get accepted to?</p>
+            <p class="answer">Answer: {{top_count}} applicants got accepted to: {{ top_university }}</p>
+        </div>
+    </div>
+{% endblock %}

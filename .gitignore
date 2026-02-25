@@ -1,0 +1,12 @@
+.coverage
+.gitattributes
+Makefile
+make.bat
+source/
+temp_backup/
+Module_3_Complete/
+.pytest_cache/
+__pycache__/
+venv/
+.venv/
+.env
